@@ -11,6 +11,7 @@ const COMMAND = {
     RESET: {name: 'reset', argNo: 0},
     UP: {name: 'up', argNo: 0},
     DOWN: {name: 'down', argNo: 0},
+    CENTER: {name: 'center', argNo: 0}
 };
 
 /***
@@ -93,6 +94,10 @@ class AtomicExecution {
                 break;
             case COMMAND.DOWN:
                 betterLogo.stroke = true;
+                break;
+            case COMMAND.CENTER:
+                betterLogo.x = betterLogo.width/2;
+                betterLogo.y = -betterLogo.height/2;
                 break;
             case COMMAND.RESET:
                 betterLogo.ctx.clearRect(0, 0, betterLogo.width, betterLogo.height);
