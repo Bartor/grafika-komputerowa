@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <script src="../shared/BetterLogo.js"></script>
+        <script src="logoPage.js"></script>
+        <link rel="stylesheet" href="logoPage.css">
+        <title>Test logo</title>
+    </head>
+    <body>
+        <main>
+<!--            html is retarded and setting this in css (at 500px with 1px border on each side)-->
+<!--            gives blurry lines on canvas-->
+            <p id="position"></p>
+            <canvas height="498" width="498" id="logoCanvas"></canvas>
+            <div id="canvasControls">
+                <input id="commandInput">
+                <button id="executeButton">Execute</button>
+            </div>
+            <p id="error"></p>
+        </main>
+    </body>
+</html>
