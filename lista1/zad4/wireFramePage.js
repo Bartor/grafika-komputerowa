@@ -9,12 +9,13 @@ window.addEventListener('load', () => {
         new Cuboid({x: 100, y: 100, z: 100}, {x: 200, y: 200, z: 400})
     );
 
-    let rerender = () => {
-        wireFrame.draw();
-        window.requestAnimationFrame(rerender);
-    };
-    window.requestAnimationFrame(rerender);
+    // let rerender = () => {
+    //     wireFrame.draw();
+    //     window.requestAnimationFrame(rerender);
+    // };
+    // window.requestAnimationFrame(rerender);
 
+    wireFrame.draw();
     let drag = false;
     canvas.addEventListener('mousedown', () => drag = true);
     canvas.addEventListener('mouseup', () => drag = false);
@@ -22,6 +23,19 @@ window.addEventListener('load', () => {
     canvas.addEventListener('mousemove', event => {
         if (drag) {
             wireFrame.move(event.movementX, event.movementY);
+            wireFrame.draw();
         }
+    });
+
+    window.addEventListener('keydown', event => {
+        const delta = 10;
+        switch (event.key) {
+            case 'w':
+                wireFrame.move(0, 0, -delta);
+                break;
+            case 's':
+                wireFrame.move(0, 0, delta);
+        }
+        wireFrame.draw();
     });
 });

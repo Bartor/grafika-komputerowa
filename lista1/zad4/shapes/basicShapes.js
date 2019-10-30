@@ -5,19 +5,32 @@ class Line3d {
     }
 
     project(perspective) {
+        if (this.start.z <= -perspective && this.end.z <= -perspective) {
+            return [];
+        }
         return [{
             start: {
-                x: perspective * this.start.x / (perspective + this.start.z),
-                y:
-                    perspective * this.start.y / (perspective + this.start.z)
-            }
-            ,
+                // This 0.01 should be actually 0, but canvas doesn't allow to draw at infinity
+                // todo: parametrize this 0.01 according to canvas size
+                x: perspective * this.start.x / Math.max(perspective + this.start.z, 0.01),
+                y: perspective * this.start.y / Math.max(perspective + this.start.z, 0.01)
+            },
             end: {
-                x: perspective * this.end.x / (perspective + this.end.z),
-                y:
-                    perspective * this.end.y / (perspective + this.end.z)
+                x: perspective * this.end.x / Math.max(perspective + this.end.z, 0.01),
+                y: perspective * this.end.y / Math.max(perspective + this.end.z, 0.01)
             }
         }];
+    }
+
+    toLines() {
+        return [this];
+    }
+
+    toMove() {
+        return [
+            this.start,
+            this.end
+        ];
     }
 }
 
