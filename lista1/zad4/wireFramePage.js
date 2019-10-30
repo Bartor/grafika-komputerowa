@@ -5,8 +5,14 @@ window.addEventListener('load', () => {
     const wireFrame = new WireFrame(canvas, perspective);
 
     wireFrame.addShapes(
-        new Cuboid({x: -100, y: -100, z: 100}, {x: 100, y: 100, z: 200}),
-        new Cuboid({x: 100, y: 100, z: 100}, {x: 200, y: 200, z: 400})
+        new Cuboid({x: 0, y: 200, z: 100}, {x: 100, y: 100, z: 200}),
+        new Cuboid({x: -100, y: 200, z: 100}, {x: 0, y: 100, z: 200}),
+        new Cuboid({x: -100, y: 200, z: 200}, {x: 0, y: 100, z: 300}),
+        new Cuboid({x: 100, y: 200, z: 300}, {x: 0, y: 100, z: 200}),
+        new Line3d({x: 0, y: 0, z: 100}, {x: 0, y: 100, z: 200}),
+        new Line3d({x: 0, y: 0, z: 300}, {x: 0, y: 100, z: 200}),
+        new Line3d({x: 100, y: 0, z: 200}, {x: 0, y: 100, z: 200}),
+        new Line3d({x: -100, y: 0, z: 200}, {x: 0, y: 100, z: 200}),
     );
 
     // let rerender = () => {
@@ -35,6 +41,7 @@ window.addEventListener('load', () => {
                 break;
             case 's':
                 wireFrame.move(0, 0, delta);
+                break;
         }
         wireFrame.draw();
     });
