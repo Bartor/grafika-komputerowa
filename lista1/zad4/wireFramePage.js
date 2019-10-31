@@ -1,5 +1,5 @@
 window.addEventListener('load', () => {
-    let perspective = 300;
+    let perspective = 500;
 
     const canvas = document.getElementById('wireFrameCanvas');
     const wireFrame = new WireFrame(canvas, perspective);
@@ -28,7 +28,8 @@ window.addEventListener('load', () => {
     canvas.addEventListener('mouseout', () => drag = false);
     canvas.addEventListener('mousemove', event => {
         if (drag) {
-            wireFrame.move(event.movementX, event.movementY);
+            wireFrame.rotate(0, event.movementY/500);
+            wireFrame.rotate(-event.movementX/500);
             wireFrame.draw();
         }
     });
@@ -41,6 +42,12 @@ window.addEventListener('load', () => {
                 break;
             case 's':
                 wireFrame.move(0, 0, delta);
+                break;
+            case 'a':
+                wireFrame.move(delta);
+                break;
+            case 'd':
+                wireFrame.move(-delta);
                 break;
         }
         wireFrame.draw();
