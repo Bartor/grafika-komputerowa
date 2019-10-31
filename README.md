@@ -1,6 +1,6 @@
 # Grafika komputerowa
 
-Kurs prowadzony przez doktora Kika.
+Kurs prowadzony przez doktora Kika. Rozwiązania można obejrzeć używając [github pages](bartor.github.io/grafika-komputerowa/index.html).
 
 ## Listy i zadania
 
