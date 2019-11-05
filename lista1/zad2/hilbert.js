@@ -1,59 +1,34 @@
-/**
- * Based on https://upload.wikimedia.org/wikipedia/commons/a/a7/Hilbert_curve_production_rules%21.svg
- */
+// not customizable with commands :(
+function hilbertForLogo(level, baseLength) {
+    const size = 2 ** level;
+    let rotation = 90;
 
-class A {
-    constructor(length) {
-        this.path = `fw ${length} rt 90 fw ${length} rt 90 fw ${length}`;
-        this.length = length;
-    }
+    let previous = {
+        x: 0, y: 0
+    };
 
-    ofDegree(n) {
-        if (n === 1) return this.path;
-        else {
-            return `${new D(this.length / 3).ofDegree(n - 1)} rt 90 fw ${this.length / 3} ${new A(this.length / 3).ofDegree(n - 1)} lt 90 fw ${this.length / 3} lt 90 ${new A(this.length / 3).ofDegree(n - 1)} fw ${this.length / 3} ${new B(this.length / 3).ofDegree(n - 1)} rt 90`;
+    let resultString = '';
+    for (let i = 1; i < size * size; i++) {
+        let current = hilbertXY(i, size);
+
+        if (current.x > previous.x) { //y can't change, go right, rot = 0
+            resultString += `rt ${rotation} fw ${baseLength} `;
+            rotation = 0;
+        } else if (current.x === previous.x) { // y must change
+            if (current.y > previous.y) { // go up, rot = 90
+                resultString += `rt ${rotation - 90} fw ${baseLength} `;
+                rotation = 90;
+            } else { //go down, rot = 270
+                resultString += `rt ${rotation - 270} fw ${baseLength} `;
+                rotation = 270;
+            }
+        } else { // y can't change, go left, rot = 180
+            resultString += `rt ${rotation - 180} fw ${baseLength} `;
+            rotation = 180;
         }
-    }
-}
 
-class B {
-    constructor(length) {
-        this.path = `rt 90 fw ${length} lt 90 fw ${length} lt 90 fw ${length}`;
-        this.length = length;
+        previous = current;
     }
 
-    ofDegree(n) {
-        if (n === 1) return this.path;
-        else {
-            return `${new C(this.length / 3).ofDegree(n - 1)} lt 90 fw ${this.length / 3} lt 90 ${new B(this.length / 3).ofDegree(n - 1)} rt 90 fw ${this.length / 3} ${new B(this.length / 3).ofDegree(n - 1)} fw ${this.length / 3} lt 90 ${new A(this.length / 3).ofDegree(n - 1)} lt 90`;
-        }
-    }
-}
-
-class C {
-    constructor(length) {
-        this.path = `fw ${length} rt 90 fw ${length} rt 90 fw ${length}`;
-        this.length = length;
-    }
-
-    ofDegree(n) {
-        if (n === 1) return this.path;
-        else {
-            return `${new B(this.length / 3).ofDegree(n - 1)} rt 90 fw ${this.length / 3} ${new C(this.length / 3).ofDegree(n - 1)} lt 90 fw ${this.length / 3} lt 90 ${new C(this.length / 3).ofDegree(n - 1)} fw ${this.length / 3} ${new D(this.length / 3).ofDegree(n - 1)} lt 90`;
-        }
-    }
-}
-
-class D {
-    constructor(length) {
-        this.path = `rt 90 fw ${length} lt 90 fw ${length} lt 90 fw ${length}`;
-        this.length = length;
-    }
-
-    ofDegree(n) {
-        if (n === 1) return this.path;
-        else {
-            return `${new A(this.length / 3).ofDegree(n - 1)} lt 90 fw ${this.length / 3} lt 90 ${new D(this.length / 3).ofDegree(n - 1)} rt 90 fw ${this.length / 3} ${new D(this.length / 3).ofDegree(n - 1)} fw ${this.length / 3} lt 90 ${new C(this.length / 3).ofDegree(n - 1)} lt 90`;
-        }
-    }
+    return resultString;
 }

@@ -1,0 +1,16 @@
+* {
+    font-family: monospace;
+}
+
+html, body {
+    margin: 0;
+    height: 100%;
+}
+
+main {
+    height: 100%;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+}
