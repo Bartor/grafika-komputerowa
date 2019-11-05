@@ -19,6 +19,7 @@ export class BetterLogo3D {
             z: 0
         };
 
+        this.stroke = true;
         this.wireFrame.addShapes(this);
 
         [this.rotation, this.pitchRotation] = [0, 0];
@@ -29,15 +30,16 @@ export class BetterLogo3D {
         this.position.z += value * Math.cos(this.pitchRotation * Math.PI / 180) * Math.cos(this.rotation * Math.PI / 180);
         this.position.x += value * Math.cos(this.pitchRotation * Math.PI / 180) * Math.sin(this.rotation * Math.PI / 180);
         this.position.y += value * Math.sin(this.pitchRotation * Math.PI / 180) * Math.cos(this.rotation * Math.PI / 180);
-        this.wireFrame.addShapes(new Line3d(start, {...this.position}));
+
+        if (this.stroke) this.wireFrame.addShapes(new Line3d(start, {...this.position}));
     }
 
     rotate(value) {
-        this.rotation = ((this.rotation + value % 360) + 360) % 360;
+        this.rotation = ((this.rotation + value) % 360 + 360) % 360;
     }
 
     pitch(value) {
-        this.pitchRotation = ((this.pitchRotation + value % 360) + 360) % 360;
+        this.pitchRotation = ((this.pitchRotation + value) % 360 + 360) % 360;
     }
 
     toLines() {

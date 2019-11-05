@@ -33,6 +33,8 @@ window.addEventListener('load', () => {
     canvas.addEventListener('mousemove', event => {
         if (drag) {
             wireFrame.rotate(-event.movementX/500, event.movementY/500);
+            betterLogo.pitch(event.movementY/500);
+            betterLogo.rotate(-event.movementX/500);
         }
     });
 
