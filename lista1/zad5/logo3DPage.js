@@ -1,26 +1,30 @@
-import {Line3d, WireFrame} from "../shared/WireFrame.js";
-import {Cuboid} from "./shapes/basicShapes.js";
+import {WireFrame} from "../shared/WireFrame.js";
+import {BetterLogo3D} from "../shared/BetterLogo3D.js";
 
 const speedUp = 0.3;
 const slowDown = 0.2;
 const maxSpeed = 50;
 
 window.addEventListener('load', () => {
-    let perspective = 500;
+    const canvas = document.getElementById('logoCanvas');
 
-    const canvas = document.getElementById('wireFrameCanvas');
-    const wireFrame = new WireFrame(canvas, perspective);
+    const wireFrame = new WireFrame(canvas, 300);
 
-    wireFrame.addShapes(
-        new Cuboid({x: 0, y: 200, z: 100}, {x: 100, y: 100, z: 200}),
-        new Cuboid({x: -100, y: 200, z: 100}, {x: 0, y: 100, z: 200}),
-        new Cuboid({x: -100, y: 200, z: 200}, {x: 0, y: 100, z: 300}),
-        new Cuboid({x: 100, y: 200, z: 300}, {x: 0, y: 100, z: 200}),
-        new Line3d({x: 0, y: 0, z: 100}, {x: 0, y: 100, z: 200}),
-        new Line3d({x: 0, y: 0, z: 300}, {x: 0, y: 100, z: 200}),
-        new Line3d({x: 100, y: 0, z: 200}, {x: 0, y: 100, z: 200}),
-        new Line3d({x: -100, y: 0, z: 200}, {x: 0, y: 100, z: 200}),
-    );
+    const betterLogo = new BetterLogo3D(wireFrame);
+    const commandInput = document.getElementById('commandInput');
+
+    commandInput.addEventListener('keyup', (event) => {
+        event.preventDefault();
+        if (event.key === 'Enter') {
+            let temp = commandInput.value;
+            commandInput.value = '';
+            betterLogo.runCommands(temp);
+        }
+    });
+
+    document.getElementById('executeButton').addEventListener('click', () => {
+        betterLogo.runCommands(commandInput.value);
+    });
 
     let drag = false;
     canvas.addEventListener('mousedown', () => drag = true);

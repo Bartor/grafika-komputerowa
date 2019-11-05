@@ -1,0 +1,48 @@
+* {
+    box-sizing: border-box;
+    font-family: monospace;
+}
+
+html, body {
+    margin: 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+main {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+}
+
+canvas {
+    border: 1px solid black;
+}
+
+#canvasControls {
+    padding-top: 10px;
+    width: 500px;
+    height: 100px;
+    display: flex;
+    flex-flow: row;
+}
+
+#canvasControls > input {
+    text-align: center;
+    resize: none;
+    border: 1px solid black;
+    margin-right: 10px;
+    flex-grow: 1;
+}
+
+button {
+    background-color: transparent;
+    border: 1px solid black;
+}
+
+button:active {
+    background-color: lightblue;
+}

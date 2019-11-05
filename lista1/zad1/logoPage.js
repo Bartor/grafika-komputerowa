@@ -1,3 +1,5 @@
+import {BetterLogo} from "../shared/BetterLogo.js";
+
 function updateCords(cords) {
     const position = document.getElementById('position');
     position.textContent = `X: ${Math.round(cords.x)} Y: ${Math.round(cords.y)} R: ${Math.round(cords.r)}`;

@@ -3,8 +3,9 @@ window.addEventListener('load', () => {
     const label = document.querySelector('label');
 
     const resizeCords = (x, y, max) => ({
-        x: x / (max - 1) * svg.width.baseVal.value,
-        y: y / (max - 1) * svg.height.baseVal.value
+        // (size - 2) + 1 for 1 px margin
+        x: x / (max - 1) * (svg.width.baseVal.value - 2) + 1,
+        y: y / (max - 1) * (svg.height.baseVal.value - 2) + 1
     });
 
     const draw = (value) => {
@@ -16,7 +17,6 @@ window.addEventListener('load', () => {
         let points = `0,0 `;
         for (let i = 1; i < size * size; i++) {
             let result = hilbertXY(i, size);
-            console.log(result)
             let current = resizeCords(result.x, result.y, size);
             points += `${current.x},${current.y} `;
             previous = current;
