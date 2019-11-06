@@ -12,7 +12,7 @@ window.addEventListener('load', () => {
     const wireFrame = new WireFrame(canvas, perspective);
 
     wireFrame.addShapes(
-        new Cuboid({x: 0, y: 200, z: 100}, {x: 100, y: 100, z: 200}),
+        new Cuboid({x: 0, y: 200, z: 100}, {x: 100, y: 100, z: 200}, '#0070ff'),
         new Cuboid({x: -100, y: 200, z: 100}, {x: 0, y: 100, z: 200}),
         new Cuboid({x: -100, y: 200, z: 200}, {x: 0, y: 100, z: 300}),
         new Cuboid({x: 100, y: 200, z: 300}, {x: 0, y: 100, z: 200}),

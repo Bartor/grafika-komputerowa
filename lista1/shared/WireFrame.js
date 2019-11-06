@@ -14,19 +14,20 @@ export class WireFrame {
         this.points = [...this.points, ...shapes.reduce((acc, shape) => [...acc, ...shape.toMove()], [])];
     }
 
-    render(renderList) {
+    render(renderList, style) {
         this.context.beginPath();
         renderList.forEach(renderPoint => {
             this.context.moveTo(renderPoint.start.x + this.dWidth, renderPoint.start.y + this.dHeight);
             this.context.lineTo(renderPoint.end.x + this.dWidth, renderPoint.end.y + this.dHeight);
         });
+        this.context.strokeStyle = style;
         this.context.stroke();
     }
 
     draw() {
         this.context.clearRect(0, 0, this.dWidth * 2 + 1, this.dHeight * 2 + 1);
         this.shapes.forEach(shape => {
-            this.render(shape.toLines().reduce((acc, line) => [...acc, ...line.project(this.perspective)], []));
+            this.render(shape.toLines().reduce((acc, line) => [...acc, ...line.project(this.perspective)], []), shape.style);
         });
     }
 
@@ -71,9 +72,10 @@ export class WireFrame {
 }
 
 export class Line3d {
-    constructor(start, end) {
+    constructor(start, end, style = '#000000') {
         this.start = start;
         this.end = end;
+        this.style = style;
     }
 
     project(perspective) {
