@@ -7,21 +7,28 @@ const slowDown = 0.2;
 const maxSpeed = 50;
 
 window.addEventListener('load', () => {
-    let perspective = 500;
+    let perspective = 1000;
 
     const canvas = document.getElementById('wireFrameCanvas');
     const wireFrame = new WireFrame(canvas, perspective);
 
+    let toRemove = new Cuboid({x: 0, y: 200, z: 100}, {x: 100, y: 100, z: 200}, '#0070ff');
+
     wireFrame.addShapes(
-        new Cuboid({x: 0, y: 200, z: 100}, {x: 100, y: 100, z: 200}, '#0070ff'),
         new Cuboid({x: -100, y: 200, z: 100}, {x: 0, y: 100, z: 200}),
         new Cuboid({x: -100, y: 200, z: 200}, {x: 0, y: 100, z: 300}),
         new Cuboid({x: 100, y: 200, z: 300}, {x: 0, y: 100, z: 200}),
+        new Cuboid({x: -10000, y: -10000, z: -10000}, {x: 10000, y: 10000, z: 10000}),
         new Line3d({x: 0, y: 0, z: 100}, {x: 0, y: 100, z: 200}),
         new Line3d({x: 0, y: 0, z: 300}, {x: 0, y: 100, z: 200}),
         new Line3d({x: 100, y: 0, z: 200}, {x: 0, y: 100, z: 200}),
         new Line3d({x: -100, y: 0, z: 200}, {x: 0, y: 100, z: 200}),
+        toRemove,
     );
+
+    setTimeout(() => {
+        wireFrame.removeShape(toRemove);
+    }, 2000);
 
     const mouseControl = new MouseControl(canvas);
     mouseControl.addListener((x, y) => wireFrame.rotate(x, y), 500, 500);

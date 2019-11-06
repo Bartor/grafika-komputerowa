@@ -14,6 +14,21 @@ export class WireFrame {
         this.points = [...this.points, ...shapes.reduce((acc, shape) => [...acc, ...shape.toMove()], [])];
     }
 
+    removeShape(shapeToRemove) {
+        let found = this.shapes.indexOf(shapeToRemove);
+        if (found !== -1) {
+            this.shapes.splice(found, 1);
+            const pointsToRemove = shapeToRemove.toMove();
+            for (let i = 0; i < this.points.length; i++) {
+                found = pointsToRemove.indexOf(this.points[i]);
+                if (found !== -1) {
+                    this.points.splice(i, 1);
+                    i--;
+                }
+            }
+        }
+    }
+
     render(renderList, style) {
         this.context.beginPath();
         renderList.forEach(renderPoint => {
