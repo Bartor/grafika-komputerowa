@@ -3,20 +3,24 @@
     <head>
         <meta charset="UTF-8">
         <script src="../shared/WireFrame.js" type="module"></script>
-        <script src="wireFramePage.js" type="module"></script>
+        <script src="wireFrameGame.js" type="module"></script>
         <script src="shapes/basicShapes.js" type="module"></script>
         <link rel="stylesheet" href="wireFramePage.css">
-        <title>WireFrame test</title>
+        <title>WireFrame Game</title>
     </head>
     <body>
         <main>
+            <h1>EPIC COMPUTER GAME</h1>
+            <h2 id="points">Points: 0</h2>
             <canvas height="600" width="1200" id="wireFrameCanvas"></canvas>
             <p>
                 Controls:
-                <ul>
-                    <li>WSAD - move</li>
-                    <li>click&drag - turn camera</li>
-                </ul>
+            <ul>
+                <li>W - speed up</li>
+                <li>S - brake</li>
+                <li>A, D - rotate camera</li>
+                <li>←, → - roll camera</li>
+            </ul>
             </p>
         </main>
     </body>

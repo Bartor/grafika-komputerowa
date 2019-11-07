@@ -18,6 +18,10 @@ main {
     align-items: center;
 }
 
+h1, h2 {
+    margin: 0;
+}
+
 canvas {
     border: 1px solid black;
 }

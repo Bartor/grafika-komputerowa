@@ -54,34 +54,56 @@ export class WireFrame {
         });
     }
 
-    rotate(pitch = 0, roll = 0, yaw = 0) {
-        let cosa = Math.cos(yaw);
-        let sina = Math.sin(yaw);
+    rotationMatrix(pitch = 0, roll = 0, yaw = 0) {
+        let cosA = Math.cos(yaw);
+        let sinA = Math.sin(yaw);
 
-        let cosb = Math.cos(pitch);
-        let sinb = Math.sin(pitch);
+        let cosB = Math.cos(pitch);
+        let sinB = Math.sin(pitch);
 
-        let cosc = Math.cos(roll);
-        let sinc = Math.sin(roll);
+        let cosC = Math.cos(roll);
+        let sinC = Math.sin(roll);
 
-        let Axx = cosa*cosb;
-        let Axy = cosa*sinb*sinc - sina*cosc;
-        let Axz = cosa*sinb*cosc + sina*sinc;
+        let Axx = cosA*cosB;
+        let Axy = cosA*sinB*sinC - sinA*cosC;
+        let Axz = cosA*sinB*cosC + sinA*sinC;
 
-        let Ayx = sina*cosb;
-        let Ayy = sina*sinb*sinc + cosa*cosc;
-        let Ayz = sina*sinb*cosc - cosa*sinc;
+        let Ayx = sinA*cosB;
+        let Ayy = sinA*sinB*sinC + cosA*cosC;
+        let Ayz = sinA*sinB*cosC - cosA*sinC;
 
-        let Azx = -sinb;
-        let Azy = cosb*sinc;
-        let Azz = cosb*cosc;
+        let Azx = -sinB;
+        let Azy = cosB*sinC;
+        let Azz = cosB*cosC;
+
+        return [
+          [Axx, Axy, Axz],
+          [Ayx, Ayy, Ayz],
+          [Azx, Azy, Azz]
+        ];
+    }
+
+    rotateCamera(pitch = 0, roll = 0, yaw = 0) {
+        let matrix = this.rotationMatrix(pitch, roll, yaw);
 
         this.points.forEach(point => {
             let [px, py, pz] = [point.x, point.y, point.z + this.perspective];
 
-            point.x = Axx*px + Axy*py + Axz*pz;
-            point.y = Ayx*px + Ayy*py + Ayz*pz;
-            point.z = Azx*px + Azy*py + Azz*pz - this.perspective;
+            point.x = matrix[0][0]*px + matrix[0][1]*py + matrix[0][2]*pz;
+            point.y = matrix[1][0]*px + matrix[1][1]*py + matrix[1][2]*pz;
+            point.z = matrix[2][0]*px + matrix[2][1]*py + matrix[2][2]*pz - this.perspective;
+        });
+    }
+
+    rotateShape(shape, pivot, pitch = 0, roll = 0, yaw = 0) {
+        let matrix= this.rotationMatrix(pitch, roll, yaw);
+
+        shape.toMove().forEach(point => {
+            let [px, py, pz] = [point.x - pivot.x, point.y - pivot.y, point.z - pivot.z];
+
+            point.x = matrix[0][0]*px + matrix[0][1]*py + matrix[0][2]*pz + pivot.x;
+            point.y = matrix[1][0]*px + matrix[1][1]*py + matrix[1][2]*pz + pivot.y;
+            point.z = matrix[2][0]*px + matrix[2][1]*py + matrix[2][2]*pz + pivot.z;
         });
     }
 }

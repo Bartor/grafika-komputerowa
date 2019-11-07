@@ -2,9 +2,9 @@ import {Line3d, WireFrame} from "../shared/WireFrame.js";
 import {Cuboid} from "./shapes/basicShapes.js";
 import {KeyboardControl, MouseControl} from "../shared/Controls.js";
 
-const speedUp = 0.3;
-const slowDown = 0.2;
-const maxSpeed = 50;
+const speedUp = 0.2;
+const slowDown = 0.1;
+const maxSpeed = 30;
 
 window.addEventListener('load', () => {
     let perspective = 1000;
@@ -13,9 +13,9 @@ window.addEventListener('load', () => {
     const wireFrame = new WireFrame(canvas, perspective);
 
     let toRemove = new Cuboid({x: 0, y: 200, z: 100}, {x: 100, y: 100, z: 200}, '#0070ff');
+    let toRotate = new Cuboid({x: -100, y: 200, z: 100}, {x: 0, y: 100, z: 200}, '#ff0070');
 
     wireFrame.addShapes(
-        new Cuboid({x: -100, y: 200, z: 100}, {x: 0, y: 100, z: 200}),
         new Cuboid({x: -100, y: 200, z: 200}, {x: 0, y: 100, z: 300}),
         new Cuboid({x: 100, y: 200, z: 300}, {x: 0, y: 100, z: 200}),
         new Cuboid({x: -10000, y: -10000, z: -10000}, {x: 10000, y: 10000, z: 10000}),
@@ -24,6 +24,7 @@ window.addEventListener('load', () => {
         new Line3d({x: 100, y: 0, z: 200}, {x: 0, y: 100, z: 200}),
         new Line3d({x: -100, y: 0, z: 200}, {x: 0, y: 100, z: 200}),
         toRemove,
+        toRotate
     );
 
     setTimeout(() => {
@@ -31,7 +32,7 @@ window.addEventListener('load', () => {
     }, 2000);
 
     const mouseControl = new MouseControl(canvas);
-    mouseControl.addListener((x, y) => wireFrame.rotate(x, y), 500, 500);
+    mouseControl.addListener((x, y) => wireFrame.rotateCamera(x, y), 500, 500);
 
     const controls = new KeyboardControl(window);
     let [vx, vz] = [0, 0];
@@ -45,9 +46,10 @@ window.addEventListener('load', () => {
     let rerender = (timestamp) => {
         let timeFactor = timestamp - previousTimestamp;
         controls.tick(timeFactor);
+        wireFrame.rotateShape(toRotate, toRotate.toMove()[0], timeFactor / 5 * Math.PI / 180, timeFactor / 5 * Math.PI / 180, timeFactor / 5 * Math.PI / 180);
 
-        vz > 0 ? vz -= Math.min(slowDown*timeFactor, vz) : vz -= Math.max(-slowDown*timeFactor, vz);
-        vx > 0 ? vx -= Math.min(slowDown*timeFactor, vx) : vx -= Math.max(-slowDown*timeFactor, vx);
+        vz > 0 ? vz -= Math.min(slowDown * timeFactor, vz) : vz -= Math.max(-slowDown * timeFactor, vz);
+        vx > 0 ? vx -= Math.min(slowDown * timeFactor, vx) : vx -= Math.max(-slowDown * timeFactor, vx);
 
         wireFrame.move(vx, 0, vz);
         wireFrame.draw();
