@@ -81,10 +81,10 @@ class AtomicExecution {
     }
 
     execute(betterLogo) {
-        if (this.command.threeD && !betterLogo.is3D) {
+        if (!this.command.threeD && betterLogo.is3D) {
             throw `${this.command.name} is reserved for 3D BetterLogo`;
         }
-        if (!this.command.threeD && betterLogo.is3D) {
+        if (!this.command.twoD && !betterLogo.is3D) {
             throw `${this.command.name} is reserved for 2D BetterLogo`;
         }
 
