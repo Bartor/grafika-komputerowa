@@ -2,6 +2,8 @@
 
 Kurs prowadzony przez doktora Kika. Rozwiązania można obejrzeć używając [github pages](https://bartor.github.io/grafika-komputerowa/index.html).
 
+Każda lista posiada osobne README opisujące rozwiązania listy.
+
 ## Listy i zadania
 
 ### Lista pierwsza
