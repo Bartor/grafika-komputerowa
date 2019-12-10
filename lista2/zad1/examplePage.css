@@ -1,0 +1,44 @@
+* {
+    box-sizing: border-box;
+    font-family: monospace;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+canvas {
+    border: 1px solid black;
+    height: 600px;
+    width: 800px;
+}
+
+nav {
+    width: 200px;
+    display: flex;
+    flex-flow: column;
+}
+
+nav > p {
+    text-align: center;
+}
+nav > button {
+    background-color: transparent;
+    border: 1px solid black;
+    margin: 8px;
+}
+
+nav > button:focus {
+    outline: 0;
+}
+
+nav > button:active {
+    background-color: #aaaaaa;
+}
