@@ -57,6 +57,18 @@ class DrawThing {
 
         this.gl.drawArrays(primitiveType, 0, this.drawCount);
     }
+
+    getInfo() {
+        let res = {
+            attributes: [],
+            uniforms: []
+        };
+        let indices = this.gl.getProgramParameter(this.program, this.gl.ACTIVE_ATTRIBUTES);
+        while (indices-->0) res.attributes.push(this.gl.getActiveAttrib(this.program, indices));
+        indices = this.gl.getProgramParameter(this.program, this.gl.ACTIVE_UNIFORMS);
+        while (indices-->0) res.uniforms.push(this.gl.getActiveUniform(this.program, indices));
+        return res;
+    }
 }
 
 async function main() {
@@ -91,9 +103,9 @@ async function main() {
     const drawThing = new DrawThing(gl, vertexShader, fragmentShader);
 
     function updatePos(event) {
-        changed = true;
         event.preventDefault();
         if (position.drag) {
+            changed = true;
             if (drawables.length >= MAX_LENGTH) {
                 drawables.shift();
             }
@@ -106,6 +118,7 @@ async function main() {
     canvas.addEventListener('mousemove', updatePos);
     canvas.addEventListener('mousedown', e => {
         position.drag = true;
+        changed = true;
         updatePos(e);
     });
     canvas.addEventListener('mouseup', () => position.drag = false);
@@ -117,6 +130,7 @@ async function main() {
             drawThing.bufferPositions(drawables.reduce((a, e) => [...a, ...e.position], []));
             drawThing.bufferColors(drawables.reduce((a, e) => [...a, ...e.color], []));
             drawThing.draw(type);
+            console.log(drawThing.getInfo());
         }
         requestAnimationFrame(drawLoop);
     }
