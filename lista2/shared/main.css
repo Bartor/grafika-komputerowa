@@ -29,16 +29,16 @@ nav {
 nav > p {
     text-align: center;
 }
-nav > button {
+button {
     background-color: transparent;
     border: 1px solid black;
     margin: 8px;
 }
 
-nav > button:focus {
+button:focus {
     outline: 0;
 }
 
-nav > button:active {
+button:active {
     background-color: #aaaaaa;
 }
