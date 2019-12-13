@@ -1,4 +1,4 @@
-export class KeyboardControl {
+class KeyboardControl {
     constructor(listenedElement) {
         this.keyMap = {};
         listenedElement.addEventListener('keydown', event => {
@@ -23,7 +23,7 @@ export class KeyboardControl {
     }
 }
 
-export class MouseControl {
+class MouseControl {
     constructor(listenedElement) {
         this.drag = false;
         this.listeners = [];

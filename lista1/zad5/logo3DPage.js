@@ -1,6 +1,5 @@
 import {WireFrame} from "../shared/WireFrame.js";
 import {BetterLogo3D} from "../shared/BetterLogo3D.js";
-import {KeyboardControl, MouseControl} from "../shared/Controls.js";
 
 const speedUp = 0.2;
 const slowDown = 0.1;

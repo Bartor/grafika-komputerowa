@@ -1,6 +1,5 @@
 import {WireFrame} from "../shared/WireFrame.js";
 import {Cuboid} from "./shapes/basicShapes.js";
-import {KeyboardControl} from "../shared/Controls.js";
 
 const DEGREE = Math.PI / 180;
 const [speedUp, yawUp, pitchUp, rollUp] = [0.2, 0.005 * DEGREE, 0.005 * DEGREE, 0.005 * DEGREE];

@@ -1,6 +1,5 @@
 import {Line3d, WireFrame} from "../shared/WireFrame.js";
 import {Cuboid} from "./shapes/basicShapes.js";
-import {KeyboardControl, MouseControl} from "../shared/Controls.js";
 
 const speedUp = 0.2;
 const slowDown = 0.1;
