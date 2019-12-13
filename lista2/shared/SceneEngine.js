@@ -1,7 +1,10 @@
 class SceneEngine {
-    constructor(background) {
+    constructor(background, width, height) {
         this.root = new SceneNode();
+        this.root.localMatrix = M4.project(this.root.localMatrix, width, height);
+
         this.background = background;
+        this.background.localMatrix = M4.project(this.background.localMatrix, width, height);
         this.background.updateWorldMatrix();
     }
 
@@ -44,7 +47,7 @@ class SceneNode {
 
     updateWorldMatrix(worldMatrix) {
         if (worldMatrix) {
-            M4.multiply(this.localMatrix, worldMatrix, this.worldMatrix);
+            M4.multiply(worldMatrix, this.localMatrix, this.worldMatrix);
         } else {
             M4.copy(this.localMatrix, this.worldMatrix);
         }
@@ -172,7 +175,7 @@ class BufferedDrawer {
     }
 
     bufferPositions(positions) {
-        this.drawCounts = positions.length / 3; // (x, y, z, w)
+        this.drawCounts = positions.length / 3; // (x, y, z)
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.positionBuffer);
         this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(positions), this.gl.STATIC_DRAW);
     }
@@ -186,8 +189,7 @@ class BufferedDrawer {
         this.gl.useProgram(this.program);
         this.gl.enable(this.gl.DEPTH_TEST); // enable depth pixels
 
-        const projectedMatrix = M4.project(transformMatrix, this.gl.canvas.width, this.gl.canvas.height); // project clip space to pixels
-        this.gl.uniformMatrix4fv(this.transformMatrixLocation, false, projectedMatrix); // set transform matrix uniform
+        this.gl.uniformMatrix4fv(this.transformMatrixLocation, false, transformMatrix); // set transform matrix uniform
 
         this.gl.enableVertexAttribArray(this.positionLocation); // bind position pointers
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.positionBuffer);
