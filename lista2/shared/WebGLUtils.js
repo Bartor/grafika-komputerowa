@@ -47,7 +47,7 @@ class M4 {
             1, 0, 0, 0,
             0, 1, 0, 0,
             0, 0, 1, 0,
-            0, 0, 1, 1
+            0, 0, 0, 1
         ];
     }
 
@@ -109,7 +109,16 @@ class M4 {
         ];
     }
 
-    static translate(m, tx, ty, tz) {
+    static projection(width, height, depth) {
+        return [
+            2 / width, 0, 0, 0,
+            0, -2 / height, 0, 0,
+            0, 0, 2 / depth, 0,
+            -1, 1, 0, 1,
+        ];
+    }
+
+    static translate(m, tx = 0, ty = 0, tz = 0) {
         return M4.multiply(m, M4.translation(tx, ty, tz));
     }
 
@@ -125,17 +134,12 @@ class M4 {
         return M4.multiply(m, M4.zRotation(angleInRadians));
     }
 
-    static scale(m, sx, sy, sz) {
+    static scale(m, sx = 1, sy = 1, sz = 1) {
         return M4.multiply(m, M4.scaling(sx, sy, sz));
     }
 
-    static projection(width, height, depth) {
-        return [
-            2 / width, 0, 0, 0,
-            0, -2 / height, 0, 0,
-            0, 0, 2 / depth, 0,
-            -1, 1, 0, 1,
-        ];
+    static project(m, width, height, depth = 1) {
+        return M4.multiply(m, M4.projection(width, height, depth));
     }
 
     static multiply(a, b, dst) {
