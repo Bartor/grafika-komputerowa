@@ -1,9 +1,18 @@
+/**
+ * This code is a total mess, but sadly I had little time to finish this.
+ */
 window.addEventListener('load', main);
 
-let playerPosition = 0;
-const ENEMIES_SPEED_INVERSE_FACTOR = 30000;
 const ENEMY_ROWS = 3;
 const ENEMY_COLS = 10;
+
+const PLAYER_ACCELERATION = window.innerWidth/2000;
+const PLAYER_MAX_SPEED = window.innerWidth/200;
+const PLAYER_DRAG = window.innerWidth/20000;
+const playerStats = {
+    vx: 0,
+    x: 0
+};
 
 async function main() {
     const gl = document.querySelector('canvas').getContext('webgl');
@@ -21,6 +30,7 @@ async function main() {
     }
 
     const scene = new SceneEngine(bg, gl.canvas.width, gl.canvas.height);
+
     const enemies = new SceneNode();
     enemies.localMatrix = M4.translation(gl.canvas.width/4);
     for (let i = 0; i < ENEMY_ROWS; i++) {
@@ -33,15 +43,25 @@ async function main() {
     }
     enemies.setParent(scene.root);
 
-    const player = new SceneNode(new Player(gl, program, 30, [0.5, 0.3, 0.9, 1]));
-    player.localMatrix = M4.translation(gl.canvas.width/2 - 30, gl.canvas.height - 30, -0.2);
+    const player = new SceneNode(new GoodGuy(gl, program, 30, [0.0, 0.5, 1, 1]));
     player.setParent(scene.root);
+
+    playerStats.x = gl.canvas.width/2 - 30;
+
+    const controls = new KeyboardControl(window);
+    controls.onKey('a', (timefactor) => playerStats.vx = Math.max(playerStats.vx - timefactor*PLAYER_ACCELERATION, -PLAYER_MAX_SPEED));
+    controls.onKey('d', (timefactor) => playerStats.vx = Math.min(playerStats.vx + timefactor*PLAYER_ACCELERATION, PLAYER_MAX_SPEED));
 
     let lastTime = 0;
     drawLoop(lastTime);
     function drawLoop(time) {
+        const timefactor = (time - lastTime)/10;
+        controls.tick(timefactor);
+        playerStats.vx > 0 ? playerStats.vx -= Math.min(PLAYER_DRAG*timefactor, playerStats.vx) : playerStats.vx -= Math.max(-PLAYER_DRAG*timefactor, playerStats.vx);
+        playerStats.x += playerStats.vx;
+        player.localMatrix = M4.translation(playerStats.x, gl.canvas.height - 60, -0.2);
         scene.draw();
         lastTime = time;
-        // requestAnimationFrame(drawLoop);
+        requestAnimationFrame(drawLoop);
     }
 }

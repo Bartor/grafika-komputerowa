@@ -1,15 +1,19 @@
 class SceneEngine {
     constructor(background, width, height) {
-        this.root = new SceneNode();
-        this.root.localMatrix = M4.project(this.root.localMatrix, width, height);
+        this.projection = M4.projection(width, height);
 
+        this.root = new SceneNode();
         this.background = background;
-        this.background.localMatrix = M4.project(this.background.localMatrix, width, height);
-        this.background.updateWorldMatrix();
+        this.background.updateWorldMatrix(this.projection);
+    }
+
+    updateProjectionMatrix(width, height) {
+        this.projection = M4.projection(width, height);
+        this.background.updateWorldMatrix(this.projection);
     }
 
     draw() {
-        this.root.updateWorldMatrix();
+        this.root.updateWorldMatrix(this.projection);
         this.root.draw();
         this.background.draw();
     }
@@ -101,7 +105,7 @@ class Square extends Shape {
     }
 }
 
-class Player extends Shape {
+class GoodGuy extends Shape {
     constructor(gl, program, size, color = new Float32Array([0, 0, 0, 1])) {
         super(gl, program);
 
