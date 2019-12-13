@@ -51,11 +51,12 @@ class M4 {
         ];
     }
 
-    static copy(a) {
-        return [...a];
+    static copy(a, dst = new Float32Array(16)) {
+        for (let i = 0; i < 16; i++) dst[i] = a[i];
+        return dst;
     }
 
-    static translation(tx, ty, tz) {
+    static translation(tx = 0, ty = 0, tz = 0) {
         return [
             1, 0, 0, 0,
             0, 1, 0, 0,
@@ -109,7 +110,7 @@ class M4 {
         ];
     }
 
-    static projection(width, height, depth) {
+    static projection(width, height, depth = 1) {
         return [
             2 / width, 0, 0, 0,
             0, -2 / height, 0, 0,
@@ -142,8 +143,7 @@ class M4 {
         return M4.multiply(m, M4.projection(width, height, depth));
     }
 
-    static multiply(a, b, dst) {
-        dst = dst || new Float32Array(16);
+    static multiply(a, b, dst = new Float32Array(16)) {
         let b00 = b[0 * 4 + 0];
         let b01 = b[0 * 4 + 1];
         let b02 = b[0 * 4 + 2];

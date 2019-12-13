@@ -1,15 +1,19 @@
 class SceneEngine {
-    constructor() {
+    constructor(background) {
         this.root = new SceneNode();
+        this.background = background;
+        this.background.updateWorldMatrix();
     }
 
     draw() {
+        this.root.updateWorldMatrix();
         this.root.draw();
+        this.background.draw();
     }
 }
 
 class SceneNode {
-    constructor(shape) {
+    constructor(shape = null) {
         this.children = [];
         this.localMatrix = M4.identity();
         this.worldMatrix = M4.identity();
@@ -39,9 +43,9 @@ class SceneNode {
 
     updateWorldMatrix(worldMatrix) {
         if (worldMatrix) {
-            this.worldMatrix = M4.multiply(this.localMatrix, worldMatrix);
+            M4.multiply(this.localMatrix, worldMatrix, this.worldMatrix);
         } else {
-            this.worldMatrix = M4.copy(this.localMatrix);
+            M4.copy(this.localMatrix, this.worldMatrix);
         }
 
         this.children.forEach(child => {
@@ -50,25 +54,34 @@ class SceneNode {
     }
 
     draw() {
-        this.updateWorldMatrix();
-        if (this.shape) this.shape.draw(this.worldMatrix);
+        if (this.shape)  {
+            this.shape.draw(this.worldMatrix);
+        }
         this.children.forEach(child => {
             child.draw();
         });
     }
 }
 
-class Square {
-    /**
-     * Constructs a new Square from (0, 0) to (width, height)
-     * @param gl WebGLRenderingContext
-     * @param program WebGLProgram
-     * @param width Square's width
-     * @param height Square's height
-     * @param color Color vector; [r, g, b, a]
-     */
-    constructor(gl, program, width, height, color = new Float32Array([0, 0, 0, 1])) {
+
+/* !abstract! */class Shape {
+    constructor(gl, program) {
         this.drawer = new BufferedDrawer(gl, program);
+    }
+
+    buffer(positions, colors) {
+        this.drawer.bufferPositions(positions);
+        this.drawer.bufferColors(colors);
+    }
+
+    draw(transformMatrix) {
+        this.drawer.draw(transformMatrix);
+    }
+}
+
+class Square extends Shape {
+    constructor(gl, program, width, height, color = new Float32Array([0, 0, 0, 1])) {
+        super(gl, program);
 
         let positions = [
             0, 0, 0,
@@ -80,13 +93,66 @@ class Square {
         ];
 
         let colors = new Array(positions.length / 3 * 4).fill(0).map((_, i) => color[i % 4]);
-
-        this.drawer.bufferPositions(positions);
-        this.drawer.bufferColors(colors);
+        this.buffer(positions, colors);
     }
+}
 
-    draw(transformMatrix) {
-        this.drawer.draw(transformMatrix);
+class Player extends Shape {
+    constructor(gl, program, size, color = new Float32Array([0, 0, 0, 1])) {
+        super(gl, program);
+
+        let positions = [
+            2*size/5, 0, 0,
+            2*size/5, 4*size/6, 0,
+            0, 4*size/6, 0,
+            3*size/5, 0, 0,
+            3*size/5, 4*size/6, 0,
+            size, 4*size/6, 0,
+            0, 5*size/6, 0,
+            2*size/5, 5*size/6, 0,
+            2*size/5, size, 0,
+            3*size/5, 5*size/6, 0,
+            size, 5*size/6, 0,
+            3*size/5, size, 0
+        ];
+
+        let colors = new Array(positions.length / 3 * 4).fill(0).map((_, i) => color[i % 4]);
+        this.buffer(positions, colors);
+    }
+}
+
+class BadGuy extends Shape {
+    constructor(gl, program, size, color = new Float32Array([0, 0, 0, 1])) {
+        super(gl, program);
+
+        let positions = [
+            0, size/2, 0,
+            size/2, 0, 0,
+            size/2, size/3, 0,
+            size/2, 0, 0,
+            size/2, size/3, 0,
+            size, size/2, 0
+        ];
+
+        let colors = new Array(positions.length / 3 * 4).fill(0).map((_, i) => color[i % 4]);
+        this.buffer(positions, colors);
+    }
+}
+
+class Star extends Shape {
+    constructor(gl, program, size, color = new Float32Array([0, 0, 0, 1])) {
+        super(gl, program);
+        let positions = [
+            0, 0, 0,
+            size, 0, 0,
+            size/2, 3/4*size, 0,
+            size/2, -1/4*size, 0,
+            0, 1/2*size, 0,
+            size, 1/2*size, 0
+        ];
+
+        let colors = new Array(positions.length / 3 * 4).fill(0).map((_, i) => color[i % 4]);
+        this.buffer(positions, colors);
     }
 }
 
