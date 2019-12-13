@@ -38,6 +38,7 @@ class SceneNode {
             this.parent.removeChild(this);
         }
 
+        this.parent = parentNode;
         parentNode.appendChild(this);
     }
 
