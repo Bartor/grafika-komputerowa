@@ -75,9 +75,10 @@ class SceneNode {
 /* !abstract! */class Shape {
     constructor(gl, program) {
         this.drawer = new BufferedDrawer(gl, program);
+        this.hitbox = []
     }
 
-    buffer(positions, colors) {
+    /* private */buffer(positions, colors) {
         this.drawer.bufferPositions(positions);
         this.drawer.bufferColors(colors);
     }
