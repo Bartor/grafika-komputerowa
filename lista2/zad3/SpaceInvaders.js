@@ -12,7 +12,8 @@ const ENEMIES_SPEED = window.innerWidth / 2000;
  * anything from there
  */
 class SpaceInvaders {
-    constructor(gl, program) {
+    constructor(gl, program, textured = false) {
+        this.textured = textured;
         this.gl = gl;
         this.program = program;
         this.player = null;
@@ -25,9 +26,9 @@ class SpaceInvaders {
         this.controls = new KeyboardControl(window);
         this.controls.onKey('w', (lastTime) => this.shoot(lastTime));
 
-        const bg = new SceneNode(new Square(gl, program, gl.canvas.width, gl.canvas.height, [0, 0.05, 0.11, 1]));
+        const bg = new SceneNode(new Square(gl, program, gl.canvas.width, gl.canvas.height, [0, 0.05, 0.11, 1], textured ? 'textures/bg.png' : undefined));
         for (let i = 0; i < 200; i++) {
-            let star = new SceneNode(new Star(gl, program, 2 + Math.random() * 5, [0, 0, 0, Math.random() * 0.8 + 0.2]));
+            let star = new SceneNode(new Star(gl, program, 2 + Math.random() * 5, [0, 0, 0, Math.random() * 0.8 + 0.2], textured ? 'textures/star.png' : undefined));
             star.localMatrix = M4.multiply(M4.zRotation(Math.random()), M4.translation(gl.canvas.width * Math.random(), gl.canvas.height * Math.random(), -0.1));
             star.setParent(bg);
         }
@@ -36,7 +37,7 @@ class SpaceInvaders {
     }
 
     makePlayer(color = [0.0, 0.5, 1, 1]) {
-        let playerNode = new SceneNode(new GoodGuy(this.gl, this.program, 30, color));
+        let playerNode = new SceneNode(new GoodGuy(this.gl, this.program, 30, color, this.textured ? 'textures/ship.png' : undefined));
         playerNode.setParent(this.scene.root);
 
         this.player = new Player(playerNode, 15, this.gl.canvas.width / 2, this.gl.canvas.height - 60,);
@@ -46,7 +47,7 @@ class SpaceInvaders {
         const enemies = new SceneNode();
         for (let i = 0; i < rows; i++) {
             for (let j = 0; j < columns + (i % 2); j++) {
-                let enemy = new SceneNode(new BadGuy(this.gl, this.program, 20, color));
+                let enemy = new SceneNode(new BadGuy(this.gl, this.program, 20, color, this.textured ? 'textures/badShip.png' : undefined));
                 this.enemies.push(new Enemy(enemy, 10, (j - (i % 2) / 2) * this.gl.canvas.width / (2 * (columns)), i * this.gl.canvas.height / 15));
                 enemy.setParent(enemies);
             }

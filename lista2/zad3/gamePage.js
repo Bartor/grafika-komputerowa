@@ -11,7 +11,7 @@ async function main() {
     const program = WebGLUtils.createProgram(gl, vertexShader, fragmentShader);
     WebGLUtils.resizeCanvas(gl, gl.canvas);
 
-    const space = new SpaceInvaders(gl, program);
+    const space = new SpaceInvaders(gl, program, window.location.toString().endsWith('#textures'));
     space.makeEnemies();
     space.makePlayer();
 
