@@ -1,4 +1,4 @@
-const DEFAULT_FIDELITY = 100;
+const DEFAULT_FIDELITY = 50;
 const DEFAULT_GRAPH_SIZE = 1000;
 
 function resize(canvas) {
@@ -38,6 +38,7 @@ class GraphEngine {
         };
         this.fidelity = DEFAULT_FIDELITY;
         this.graphSize = DEFAULT_GRAPH_SIZE;
+        this.triangles = false;
     }
 
     /**
@@ -66,8 +67,11 @@ class GraphEngine {
      * @param xBounds First arguments from x0 to x1 in form of [x0, x1]
      * @param yBounds Second arguments from y0 to y1 in form of [y0, y1]
      * @param normalizeHeight Should Z be normalized (to half the graph size)
+     * @param triangles If area should be filled with triangles
      */
-    drawArea(xBounds, yBounds, normalizeHeight = false) {
+    drawArea(xBounds, yBounds, triangles = false, normalizeHeight = false) {
+        this.triangles = triangles;
+        this.points = [];
         let minValue = Number.POSITIVE_INFINITY;
         let maxValue = Number.NEGATIVE_INFINITY;
         for (let x = 0; x < this.fidelity; x++) {
@@ -77,16 +81,63 @@ class GraphEngine {
                     yBounds[0] + y * (yBounds[1] - yBounds[0]) / this.fidelity
                 );
 
-                this.points.push(
-                    x * this.graphSize / this.fidelity - this.graphSize / 2,
-                    y * this.graphSize / this.fidelity - this.graphSize / 2,
-                    val
-                ); // [x0, y0, z0, x1, y1, z1, ...]
+                if (triangles) {
+                    let nextY = null, nextX = null, nextYX = null;
+                    if (y !== this.fidelity - 1) {
+                        nextY = this.fn(
+                            xBounds[0] + x * (xBounds[1] - xBounds[0]) / this.fidelity,
+                            yBounds[0] + (y + 1) * (yBounds[1] - yBounds[0]) / this.fidelity
+                        );
+                    }
+                    if (x !== this.fidelity - 1) {
+                        nextX = this.fn(
+                            xBounds[0] + (x + 1) * (xBounds[1] - xBounds[0]) / this.fidelity,
+                            yBounds[0] + y * (yBounds[1] - yBounds[0]) / this.fidelity
+                        );
+                    }
+                    if (x !== this.fidelity - 1 && y !== this.fidelity - 1) {
+                        nextYX = this.fn(
+                            xBounds[0] + (x + 1) * (xBounds[1] - xBounds[0]) / this.fidelity,
+                            yBounds[0] + (y + 1) * (yBounds[1] - yBounds[0]) / this.fidelity
+                        );
+                    }
+
+                    if (nextX !== null && nextY !== null && nextYX !== null) {
+                        this.points.push(
+                            x * this.graphSize / this.fidelity - this.graphSize / 2,
+                            y * this.graphSize / this.fidelity - this.graphSize / 2,
+                            val,
+                            (x + 1) * this.graphSize / this.fidelity - this.graphSize / 2,
+                            y * this.graphSize / this.fidelity - this.graphSize / 2,
+                            nextX,
+                            x * this.graphSize / this.fidelity - this.graphSize / 2,
+                            (y + 1) * this.graphSize / this.fidelity - this.graphSize / 2,
+                            nextY,
+                            (x + 1) * this.graphSize / this.fidelity - this.graphSize / 2,
+                            (y + 1) * this.graphSize / this.fidelity - this.graphSize / 2,
+                            nextYX,
+                            (x + 1) * this.graphSize / this.fidelity - this.graphSize / 2,
+                            y * this.graphSize / this.fidelity - this.graphSize / 2,
+                            nextX,
+                            x * this.graphSize / this.fidelity - this.graphSize / 2,
+                            (y + 1) * this.graphSize / this.fidelity - this.graphSize / 2,
+                            nextY
+                        );
+                    }
+                } else {
+                    this.points.push(
+                        x * this.graphSize / this.fidelity - this.graphSize / 2,
+                        y * this.graphSize / this.fidelity - this.graphSize / 2,
+                        val
+                    );
+                }
+
                 if (val > maxValue) maxValue = val;
                 if (val < minValue) minValue = val;
             }
         }
-        let scaleFactor = normalizeHeight ? 1 / 2 * this.graphSize / (maxValue - minValue) : this.fidelity;
+
+        let scaleFactor = normalizeHeight ? 1 / 2 * this.graphSize / (maxValue - minValue) : Math.abs(xBounds[0] - xBounds[1]) * Math.abs(yBounds[1] - yBounds[0]);
 
         this.points = this.points.map((p, i) => i % 3 === 2 ? p * scaleFactor : p);
 
@@ -112,6 +163,10 @@ class GraphEngine {
             0
         );
 
-        this.gl.drawArrays(this.gl.POINTS, 0, this.fidelity ** 2);
+        this.gl.drawArrays(
+            this.triangles ? this.gl.TRIANGLES : this.gl.POINTS,
+            0,
+            this.triangles ? 6 * this.fidelity ** 2 : this.fidelity ** 2
+        );
     }
 }

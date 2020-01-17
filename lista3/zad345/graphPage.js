@@ -1,7 +1,7 @@
 window.addEventListener('load', () => {
     const canvas = document.querySelector('canvas');
 
-    const engine = new GraphEngine(canvas, (x, y) => Math.sqrt(x ** 2 + y ** 2));
+    const engine = new GraphEngine(canvas, (x, y) => Math.sin(x) * Math.cos(y));
     engine.init().then(() => {
         const rot = {
             y: Math.PI / 3,
@@ -15,13 +15,14 @@ window.addEventListener('load', () => {
             rot.changed = true;
         }, 100, 100);
 
-        engine.drawArea([-5, 5], [-5, 5]);
+        engine.drawArea([-5, 5], [-5, 5], true);
 
         let tm = M4.perspective(Math.PI / 4, canvas.width / canvas.height, 1, 5000);
 
         const drawLoop = () => {
             if (rot.changed) {
                 let cameraMatrix = M4.xRotation(rot.y);
+                cameraMatrix = M4.yRotate(cameraMatrix, rot.x);
                 cameraMatrix = M4.translate(cameraMatrix, 0, 0, 2000);
                 let projectionMatrix = M4.multiply(tm, M4.inverse(cameraMatrix));
 
