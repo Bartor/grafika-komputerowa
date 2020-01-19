@@ -1,7 +1,25 @@
 window.addEventListener('load', () => {
-    const canvas = document.querySelector('canvas');
+    const container = document.querySelector('main');
+    const input = document.querySelector('input');
 
-    const engine = new GraphEngine(canvas, (x, y) => Math.sin(x) * Math.cos(y));
+    input.addEventListener('keypress', e => {
+        if (e.key === 'Enter') {
+            const fn = eval(input.value); // whatever
+            createGraph(container, fn);
+        }
+    });
+
+    createGraph(container, (x, y) => Math.sin(x * y));
+});
+
+function createGraph(container, fn, xBounds = [-5, 5], yBounds = [-5, 5]) {
+    while (container.firstChild) container.removeChild(container.firstChild);
+    const canvas = document.createElement('canvas');
+    canvas.height = 800;
+    canvas.width = 1200;
+    container.append(canvas);
+
+    const engine = new GraphEngine(canvas, fn);
     engine.init().then(() => {
         const movement = {
             y: Math.PI / 3,
@@ -21,7 +39,7 @@ window.addEventListener('load', () => {
             movement.changed = true
         });
 
-        engine.drawArea([-5, 5], [-5, 5], true);
+        engine.drawArea(xBounds, yBounds, true);
 
         let projectionMatrix = M4.perspective(Math.PI / 4, canvas.width / canvas.height, 1, 5000);
 
@@ -39,4 +57,4 @@ window.addEventListener('load', () => {
 
         drawLoop();
     }).catch(console.error);
-});
+}

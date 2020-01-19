@@ -16,6 +16,6 @@ void main() {
     float light = dot(normal, u_reverseLightDirection);
 
     gl_FragColor = vec4(0, 0.44, 1, 1);
-    gl_FragColor.rgb *= (light + u_ambient);
+    gl_FragColor.rgb *= max(min(light + u_ambient, 1.5), u_ambient);
     gl_FragColor = mix(gl_FragColor, vec4(1, 1, 1, 1), fogAmount);
 }

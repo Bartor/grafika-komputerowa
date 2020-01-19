@@ -167,7 +167,7 @@ class GraphEngine {
                             ...triangleNormal(secondTriangle, true),
                             ...triangleNormal(secondTriangle, true),
                             ...triangleNormal(secondTriangle, true)
-                        );
+                        ); // push normal vector for each point
                     }
                 } else {
                     this.points.push(
@@ -197,7 +197,7 @@ class GraphEngine {
         this.gl.uniform1f(this.glInfo.fogNearLocation, 2000.0);
         this.gl.uniform1f(this.glInfo.forFarLocation, 5000.0);
 
-        this.gl.uniform1f(this.glInfo.ambientLocation, 0.2);
+        this.gl.uniform1f(this.glInfo.ambientLocation, 0.5);
 
         this.gl.uniformMatrix4fv(this.glInfo.worldViewLocation, false, worldView);
         this.gl.uniformMatrix4fv(this.glInfo.projectionLocation, false, projection);
