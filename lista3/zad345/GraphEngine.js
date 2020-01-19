@@ -231,7 +231,7 @@ class GraphEngine {
         this.gl.drawArrays(
             this.triangles ? this.gl.TRIANGLES : this.gl.POINTS,
             0,
-            this.triangles ? 6 * this.fidelity ** 2 : this.fidelity ** 2
+            this.triangles ? this.points.length / 3 : this.fidelity ** 2
         );
     }
 }
