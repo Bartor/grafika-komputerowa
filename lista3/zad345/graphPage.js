@@ -4,8 +4,14 @@ window.addEventListener('load', () => {
 
     input.addEventListener('keypress', e => {
         if (e.key === 'Enter') {
-            const fn = eval(input.value); // whatever
-            createGraph(container, fn);
+            with (Math) { // with...
+                try {
+                    const fn = eval(`(x, y) => ${input.value}`); // ...and eval, in two lines in a row B)
+                    createGraph(container, fn);
+                } catch (e) {
+                    alert('Erroneous function');
+                }
+            }
         }
     });
 
