@@ -60,7 +60,8 @@ class GraphEngine {
             projectionLocation: null,
             fogNearLocation: null,
             forFarLocation: null,
-            reverseLightDirection: null
+            reverseLightDirection: null,
+            ambientLocation: null
         };
         this.fidelity = DEFAULT_FIDELITY;
         this.graphSize = DEFAULT_GRAPH_SIZE;
@@ -86,6 +87,7 @@ class GraphEngine {
                 this.glInfo.fogNearLocation = this.gl.getUniformLocation(program, 'u_fogNear');
                 this.glInfo.forFarLocation = this.gl.getUniformLocation(program, 'u_fogFar');
                 this.glInfo.reverseLightDirection = this.gl.getUniformLocation(program, 'u_reverseLightDirection');
+                this.glInfo.ambientLocation = this.gl.getUniformLocation(program, 'u_ambient');
                 resolve();
             }).catch(reject);
         });
@@ -166,7 +168,6 @@ class GraphEngine {
                             ...triangleNormal(secondTriangle, true),
                             ...triangleNormal(secondTriangle, true)
                         );
-                        // this.normals.push(0.6, 0.2, 0.4, 0.6, 0.2, 0.4);
                     }
                 } else {
                     this.points.push(
@@ -195,6 +196,8 @@ class GraphEngine {
 
         this.gl.uniform1f(this.glInfo.fogNearLocation, 2000.0);
         this.gl.uniform1f(this.glInfo.forFarLocation, 5000.0);
+
+        this.gl.uniform1f(this.glInfo.ambientLocation, 0.2);
 
         this.gl.uniformMatrix4fv(this.glInfo.worldViewLocation, false, worldView);
         this.gl.uniformMatrix4fv(this.glInfo.projectionLocation, false, projection);
