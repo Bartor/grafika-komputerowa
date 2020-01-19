@@ -131,6 +131,41 @@ class M4 {
         ];
     }
 
+    static cross(a, b) {
+        return [a[1] * b[2] - a[2] * b[1],
+            a[2] * b[0] - a[0] * b[2],
+            a[0] * b[1] - a[1] * b[0]];
+    }
+
+    static subtractVectors(a, b) {
+        return [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+    }
+
+    static normalize(v) {
+        let length = Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
+        if (length > 0.00001) {
+            return [v[0] / length, v[1] / length, v[2] / length];
+        } else {
+            return [0, 0, 0];
+        }
+    }
+
+    static lookAt(cameraPosition, target, up) {
+        let zAxis = M4.normalize(M4.subtractVectors(cameraPosition, target));
+        let xAxis = M4.normalize(M4.cross(up, zAxis));
+        let yAxis = M4.normalize(M4.cross(zAxis, xAxis));
+
+        return [
+            xAxis[0], xAxis[1], xAxis[2], 0,
+            yAxis[0], yAxis[1], yAxis[2], 0,
+            zAxis[0], zAxis[1], zAxis[2], 0,
+            cameraPosition[0],
+            cameraPosition[1],
+            cameraPosition[2],
+            1,
+        ];
+    }
+
     static translate(m, tx = 0, ty = 0, tz = 0) {
         return M4.multiply(m, M4.translation(tx, ty, tz));
     }

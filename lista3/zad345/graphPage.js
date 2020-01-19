@@ -3,31 +3,36 @@ window.addEventListener('load', () => {
 
     const engine = new GraphEngine(canvas, (x, y) => Math.sin(x) * Math.cos(y));
     engine.init().then(() => {
-        const rot = {
+        const movement = {
             y: Math.PI / 3,
             x: 0,
+            dist: 2000,
             changed: true
         };
         const controls = new MouseControl(canvas);
         controls.addListener((x, y) => {
-            rot.y -= y;
-            rot.x += x;
-            rot.changed = true;
+            movement.y -= y;
+            movement.x += x;
+            movement.changed = true;
         }, 100, 100);
+
+        document.addEventListener('wheel', e => {
+            movement.dist += e.deltaY;
+            movement.changed = true
+        });
 
         engine.drawArea([-5, 5], [-5, 5], true);
 
-        let tm = M4.perspective(Math.PI / 4, canvas.width / canvas.height, 1, 5000);
+        let projectionMatrix = M4.perspective(Math.PI / 4, canvas.width / canvas.height, 1, 5000);
 
         const drawLoop = () => {
-            if (rot.changed) {
-                let cameraMatrix = M4.xRotation(rot.y);
-                cameraMatrix = M4.yRotate(cameraMatrix, rot.x);
-                cameraMatrix = M4.translate(cameraMatrix, 0, 0, 2000);
-                let projectionMatrix = M4.multiply(tm, M4.inverse(cameraMatrix));
+            if (movement.changed) {
+                let cameraMatrix = M4.xRotation(movement.y);
+                cameraMatrix = M4.yRotate(cameraMatrix, movement.x);
+                cameraMatrix = M4.translate(cameraMatrix, 0, 0, movement.dist);
 
-                engine.draw(projectionMatrix);
-                rot.changed = false;
+                engine.draw(M4.inverse(cameraMatrix), projectionMatrix);
+                movement.changed = false;
             }
             requestAnimationFrame(drawLoop);
         };

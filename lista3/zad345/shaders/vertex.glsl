@@ -1,13 +1,16 @@
 attribute vec4 a_position;
-attribute vec4 a_color;
+attribute vec3 a_normal;
 
-uniform mat4 u_matrix;
+uniform mat4 u_worldView;
+uniform mat4 u_projection;
 
-varying vec4 v_color;
+varying float v_fogDepth;
+varying vec3 v_normal;
 
 void main() {
-    gl_Position = u_matrix * a_position;
+    gl_Position = u_projection * u_worldView * a_position;
     gl_PointSize = 5.0;
 
-    v_color = vec4(0, 0.44, 1, 1);
+    v_fogDepth = -(u_worldView * a_position).z;
+    v_normal = a_normal;
 }
